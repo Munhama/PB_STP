@@ -47,9 +47,6 @@ public class Controller {
     private TableColumn<Person, String> tableName;
 
     @FXML
-    private Button createButton;
-
-    @FXML
     private TextField nameField;
 
     @FXML
@@ -100,6 +97,11 @@ map.put("Vlasd", "1231231231");
                 System.out.println(map);
             }
         });
+
+        clearButton.setOnAction(actionEvent -> {
+            data.clear();
+        });
+
     }
 
     public static class Person{
