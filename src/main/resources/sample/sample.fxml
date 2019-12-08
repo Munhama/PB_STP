@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <Button fx:id="createButton" layoutX="14.0" layoutY="248.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Создать" />
+      <Button fx:id="clearButton" layoutX="482.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Очистить" />
+      <Button fx:id="saveButton" layoutX="482.0" layoutY="46.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Сохранить" />
+      <Button fx:id="deleteButton" layoutX="482.0" layoutY="79.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Удалить" />
+      <Button fx:id="changeButton" layoutX="482.0" layoutY="114.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Изменить" />
+      <Button fx:id="addButton" layoutX="482.0" layoutY="304.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Добавить" />
+      <Button fx:id="findButton" layoutX="482.0" layoutY="337.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="Найти" />
+      <Label layoutX="14.0" layoutY="291.0" prefHeight="17.0" prefWidth="74.0" text="ФИО" />
+      <Label layoutX="242.0" layoutY="291.0" prefHeight="17.0" prefWidth="86.0" text="Номер" />
+      <TextField fx:id="nameField" layoutX="14.0" layoutY="325.0" prefHeight="25.0" prefWidth="219.0" />
+      <TextField fx:id="numberField" layoutX="242.0" layoutY="325.0" prefHeight="25.0" prefWidth="219.0" />
+      <TableView fx:id="phoneBookField" layoutX="14.0" layoutY="4.0" prefHeight="200.0" prefWidth="438.0">
+         <columns>
+            <TableColumn fx:id="tableName" prefWidth="273.0" text="Name" />
+            <TableColumn fx:id="tableNumber" prefWidth="163.0" text="Number" />
+         </columns>
+      </TableView>
+   </children>
+</AnchorPane>
