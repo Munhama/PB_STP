@@ -1,21 +1,14 @@
 package sample;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
-import java.util.Collection;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 public class Controller {
 
@@ -58,6 +51,8 @@ public class Controller {
     @FXML
     private Button changeButton;
 
+    String oldName = "";
+    String oldNumber = "";
 
     @FXML
     void initialize() {
@@ -70,13 +65,16 @@ public class Controller {
         );
 
         ObservableList<Person> data =
-            FXCollections.observableArrayList(
-                    new Person("Vlasd", "1231231231")
-            );
+                FXCollections.observableArrayList(
+                        new Person("Vlasd", "1231231231")
+                );
 
-Multimap<String, String> map = ArrayListMultimap.create();
-Collection<String> col;
-map.put("Vlasd", "1231231231");
+        SortedSetMultimap<String, String> map = TreeMultimap.create();
+        map.put("Vlasd", "1231231231");
+
+        String numberMatcher = "^-?\\d+$";
+
+        phoneBookField.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         phoneBookField.setItems(data);
 
@@ -84,7 +82,7 @@ map.put("Vlasd", "1231231231");
             String name = nameField.getText();
             String number = numberField.getText();
 
-            if (!name.equals("") && !number.equals("")) {
+            if (!name.equals("") && number.matches(numberMatcher) && !number.equals("")) {
                 data.clear();
                 map.put(name, number);
                 Set<String> keys = map.keySet();
@@ -96,19 +94,88 @@ map.put("Vlasd", "1231231231");
                 }
                 System.out.println(map);
             }
+
+
         });
 
         clearButton.setOnAction(actionEvent -> {
             data.clear();
+            map.clear();
         });
 
+        changeButton.setOnAction(actionEvent -> {
+            nameField.setDisable(true);
+            Person p = phoneBookField.getSelectionModel().getSelectedItem();
+            oldName = p.getName();
+            oldNumber = p.getNumber();
+            nameField.setText(p.getName());
+            numberField.setText(p.getNumber());
+        });
+
+        saveButton.setOnAction(actionEvent -> {
+            Person newPerson = new Person(nameField.getText(), numberField.getText());
+            Iterable itr = map.get(oldName);
+
+            List<String> result = Lists.newArrayList(itr);
+            result.set(result.indexOf(oldNumber), newPerson.getNumber());
+            map.replaceValues(oldName, result);
+            if (newPerson.getNumber().matches(numberMatcher) && !newPerson.getNumber().equals("")) {
+                data.clear();
+                Set<String> keys = map.keySet();
+                for (String key : keys) {
+                    Collection<String> values = map.get(key);
+                    for (String val : values) {
+                        data.add(new Person(key, val));
+                    }
+                }
+            }
+            nameField.setDisable(false);
+            oldName = "";
+            oldNumber = "";
+        });
+
+        deleteButton.setOnAction(actionEvent -> {
+            Person p = phoneBookField.getSelectionModel().getSelectedItem();
+
+            map.remove(p.getName(), p.getNumber());
+
+            data.clear();
+            Set<String> keys = map.keySet();
+            for (String key : keys) {
+                Collection<String> values = map.get(key);
+                for (String val : values) {
+                    data.add(new Person(key, val));
+                }
+            }
+        });
+
+        findButton.setOnAction(actionEvent -> {
+            phoneBookField.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            String name = nameField.getText();
+
+            phoneBookField.getSelectionModel().clearSelection();
+            phoneBookField.requestFocus();
+
+            Iterable itr = map.get(name);
+            List<String> result = Lists.newArrayList(itr);
+            boolean flag = true;
+            for (Person p : data) {
+                if (p.getName().equals(name)) {
+                    phoneBookField.getSelectionModel().select(p);
+                    if (flag) {
+                        phoneBookField.scrollTo(p);
+                        flag = false;
+                    }
+                }
+            }
+        });
     }
 
-    public static class Person{
+    public static class Person {
         private String name;
         private String number;
 
-        Person(String name, String number){
+        Person(String name, String number) {
             this.name = name;
             this.number = number;
         }
